@@ -1,0 +1,340 @@
+{
+  "shots": [
+    {
+      "id": "1-hook",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 49,
+      "fps": 16,
+      "duration_s": 3.06,
+      "kind": "character",
+      "in_frame": [
+        "Alex",
+        "Jordan"
+      ],
+      "faces_visible": [
+        "Jordan"
+      ],
+      "shot_type": "ecu",
+      "framing": "ecu",
+      "grade": "desire",
+      "camera": "Vertical extreme close-up of her eyes, The camera creeps in slowly and steadily the whole time.",
+      "action": "Jordan: her eyes stay locked on a figure just off-camera, catchlights bright, lips sealed, a slow blink, neon bokeh behind.",
+      "motion": "slow blink; catchlights; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/1-hook_start.png",
+      "end_frame": "keyframes/1-hook_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical extreme close-up of her eyes, The camera creeps in slowly and steadily the whole time. Jordan: her eyes stay locked on a figure just off-camera, catchlights bright, lips sealed, a slow blink, neon bokeh behind. Warm amber candle-like light, golden glow on skin. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "vo",
+      "beat": "hook"
+    },
+    {
+      "id": "2-est",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 33,
+      "fps": 16,
+      "duration_s": 2.06,
+      "kind": "aerial",
+      "in_frame": [],
+      "faces_visible": [],
+      "shot_type": "establishing",
+      "framing": "establishing",
+      "grade": "danger",
+      "camera": "Vertical aerial of wet rooftops and a single lit doorway, The camera creeps in slowly and steadily the whole time.",
+      "action": "The camera glides in toward the lit doorway along the wet roof ridge, city lights staying still in the distance.",
+      "motion": "slow glide toward the doorway",
+      "anchor": "keyed",
+      "start_frame": "keyframes/2-est_start.png",
+      "end_frame": "keyframes/2-est_end.png",
+      "prompt": "Photoreal cinematic aerial drone footage, glossy commercial-grade look, rim light along wet rooftops and steel edges, night city lights, subtle 35mm film grain. Vertical aerial of wet rooftops and a single lit doorway, The camera creeps in slowly and steadily the whole time. The camera glides in toward the lit doorway along the wet roof ridge, city lights staying still in the distance. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast, hands, fingers",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "vo",
+      "allow_short": "1-2 s establishing insert"
+    },
+    {
+      "id": "2-ecu",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 41,
+      "fps": 16,
+      "duration_s": 2.56,
+      "kind": "character",
+      "in_frame": [
+        "Alex"
+      ],
+      "faces_visible": [
+        "Alex"
+      ],
+      "shot_type": "ecu",
+      "framing": "ecu",
+      "grade": "danger",
+      "camera": "Vertical extreme close-up of his eyes, The camera creeps in slowly and steadily the whole time.",
+      "action": "Alex: his tired eyes snap wider, brows rising, a sharp breath, lips sealed, cold blue neon on the skin.",
+      "motion": "eyes widen; brows rise; breath; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/2-ecu_start.png",
+      "end_frame": "keyframes/2-ecu_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical extreme close-up of his eyes, The camera creeps in slowly and steadily the whole time. Alex: his tired eyes snap wider, brows rising, a sharp breath, lips sealed, cold blue neon on the skin. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "vo"
+    },
+    {
+      "id": "2-react",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 33,
+      "fps": 16,
+      "duration_s": 2.06,
+      "kind": "character",
+      "in_frame": [
+        "Jordan"
+      ],
+      "faces_visible": [
+        "Jordan"
+      ],
+      "shot_type": "cu",
+      "framing": "cu",
+      "grade": "desire",
+      "camera": "Vertical close-up in side profile, The camera creeps in slowly and steadily the whole time.",
+      "action": "Jordan turns from profile toward camera, eyes glistening, lips parted with a held breath, amber light on her jaw.",
+      "motion": "head turn profile to three-quarter; held breath",
+      "anchor": "keyed",
+      "start_frame": "keyframes/2-react_start.png",
+      "end_frame": "keyframes/2-react_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical close-up in side profile, The camera creeps in slowly and steadily the whole time. Jordan turns from profile toward camera, eyes glistening, lips parted with a held breath, amber light on her jaw. Warm amber candle-like light, golden glow on skin. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "listener",
+      "allow_short": "1 s reaction"
+    },
+    {
+      "id": "3-insert",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 41,
+      "fps": 16,
+      "duration_s": 2.56,
+      "kind": "insert",
+      "in_frame": [],
+      "faces_visible": [],
+      "shot_type": "insert",
+      "framing": "insert",
+      "grade": "danger",
+      "camera": "Vertical macro of a black smartphone face-down on wet concrete, The camera creeps in slowly and steadily the whole time.",
+      "action": "The dark phone screen wakes with a bright incoming-call glow that blooms across the wet concrete.",
+      "motion": "screen wakes; glow blooms; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/3-insert_start.png",
+      "end_frame": "keyframes/3-insert_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, rim light on the edges, 85mm macro lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical macro of a black smartphone face-down on wet concrete, The camera creeps in slowly and steadily the whole time. The dark phone screen wakes with a bright incoming-call glow that blooms across the wet concrete. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast, hands, fingers",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "vo",
+      "overlay": "incoming call"
+    },
+    {
+      "id": "3-os",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 49,
+      "fps": 16,
+      "duration_s": 3.06,
+      "kind": "character",
+      "in_frame": [
+        "Jordan"
+      ],
+      "faces_visible": [
+        "Jordan"
+      ],
+      "shot_type": "cu",
+      "framing": "cu",
+      "grade": "danger",
+      "camera": "Vertical close-up of the listener, The camera creeps in slowly and steadily the whole time.",
+      "action": "Jordan listens, eyes widening, lips sealed, the neon behind her staying still.",
+      "motion": "eyes widen; lips sealed; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/3-os_start.png",
+      "end_frame": "keyframes/3-os_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical close-up of the listener, The camera creeps in slowly and steadily the whole time. Jordan listens, eyes widening, lips sealed, the neon behind her staying still. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "listener",
+      "line": "Don't answer that.",
+      "subtitle": "Don't answer that.",
+      "speaker": "Alex (O.S.)",
+      "line_audio": "audio/lines/3-os.wav"
+    },
+    {
+      "id": "4-ots",
+      "scene": "EXT. ROOFTOP - NIGHT",
+      "method": "a14b",
+      "frames": 49,
+      "fps": 16,
+      "duration_s": 3.06,
+      "kind": "character",
+      "in_frame": [
+        "Alex",
+        "Jordan"
+      ],
+      "faces_visible": [
+        "Jordan"
+      ],
+      "shot_type": "ots",
+      "framing": "ots",
+      "grade": "desire",
+      "camera": "Vertical over-the-shoulder: the back of Alex's head soft in the foreground, Jordan sharp, The camera creeps in slowly and steadily the whole time.",
+      "action": "Jordan meets his gaze, a breath, lips sealed, faces kept a clear gap apart, amber light on her jaw.",
+      "motion": "held gaze; breath; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/4-ots_start.png",
+      "end_frame": "keyframes/4-ots_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical over-the-shoulder: the back of Alex's head soft in the foreground, Jordan sharp, The camera creeps in slowly and steadily the whole time. Jordan meets his gaze, a breath, lips sealed, faces kept a clear gap apart, amber light on her jaw. Warm amber candle-like light, golden glow on skin. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "os",
+      "mouth_hidden": true
+    },
+    {
+      "id": "5-door",
+      "scene": "INT. STAIRWELL - NIGHT",
+      "method": "a14b",
+      "frames": 41,
+      "fps": 16,
+      "duration_s": 2.56,
+      "kind": "insert",
+      "in_frame": [],
+      "faces_visible": [],
+      "shot_type": "insert",
+      "framing": "insert",
+      "grade": "danger",
+      "camera": "Vertical close shot of a painted metal door, slightly ajar, The camera creeps in slowly and steadily the whole time.",
+      "action": "A stripe of warm light widens slowly as the door eases farther ajar, dust turning in the beam.",
+      "motion": "light stripe widens; door eases ajar",
+      "anchor": "keyed",
+      "start_frame": "keyframes/5-door_start.png",
+      "end_frame": "keyframes/5-door_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, rim light on the edges, 85mm macro lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical close shot of a painted metal door, slightly ajar, The camera creeps in slowly and steadily the whole time. A stripe of warm light widens slowly as the door eases farther ajar, dust turning in the beam. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast, hands, fingers",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "vo",
+      "line": "Wait.",
+      "subtitle": "Wait.",
+      "speaker": "Sam (O.S.)",
+      "end_on": "uncompleted_action",
+      "line_audio": "audio/lines/5-door.wav"
+    },
+    {
+      "id": "5-end",
+      "scene": "INT. STAIRWELL - NIGHT",
+      "method": "a14b",
+      "frames": 41,
+      "fps": 16,
+      "duration_s": 2.56,
+      "kind": "character",
+      "in_frame": [
+        "Sam"
+      ],
+      "faces_visible": [
+        "Sam"
+      ],
+      "shot_type": "cu",
+      "framing": "cu",
+      "grade": "danger",
+      "camera": "Vertical close-up just inside the doorway, The camera creeps in slowly and steadily the whole time.",
+      "action": "Sam stands in the warm light, eyes on a figure ahead, lips sealed, the door still moving at the edge of frame.",
+      "motion": "held look; door still moving; camera creeps in",
+      "anchor": "keyed",
+      "start_frame": "keyframes/5-end_start.png",
+      "end_frame": "keyframes/5-end_end.png",
+      "prompt": "Photoreal cinematic live action, glossy commercial-grade look, cinematic rim lighting separating the subject from the dark background, bright catchlights in the eyes, sharp focus, 85mm lens, shallow depth of field with bokeh, subtle 35mm film grain. Vertical close-up just inside the doorway, The camera creeps in slowly and steadily the whole time. Sam stands in the warm light, eyes on a figure ahead, lips sealed, the door still moving at the edge of frame. Cool blue-grey night light, steel-blue shadows. Same people, wardrobe and place as the start image, moving continuously into the end image. One continuous shot.",
+      "negative": "static, motionless, frozen video, still frame, locked-off camera, crossfade, dissolve, double exposure, morphing face, two faces merging, fused lips, different face, deformed face, melting, extra person, extra limbs, extra fingers, deformed hands, hands on face, text, subtitles, logo, watermark, cut, scene change, talking, mouth moving, flat lighting, dull colours, low contrast",
+      "seeds": [
+        611,
+        733,
+        857,
+        919
+      ],
+      "status": "todo",
+      "line_mode": "listener",
+      "line": "You were not supposed to open it.",
+      "subtitle": "You were not supposed to open it.",
+      "speaker": "Alex (O.S.)",
+      "end_on": "confession",
+      "line_audio": "audio/lines/5-end.wav"
+    }
+  ],
+  "stages": [
+    "wan"
+  ],
+  "presets": {
+    "hybrid8": {
+      "steps": 8,
+      "cfg": 1.0,
+      "sampler": "euler",
+      "scheduler": "simple",
+      "shift": 8.0,
+      "width": 480,
+      "height": 848,
+      "fps": 16
+    }
+  },
+  "ladder": [
+    "hybrid8"
+  ],
+  "default_preset": "hybrid8",
+  "max_tries": 2,
+  "note": "demo job for the mock or ComfyUI provider; no start/end PNGs are shipped in the seed"
+}
