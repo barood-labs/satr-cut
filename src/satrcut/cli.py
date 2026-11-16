@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -103,12 +104,16 @@ def cmd_keyframes_register(args: argparse.Namespace) -> int:
 
 
 def cmd_render(args: argparse.Namespace) -> int:
+    workflow = args.workflow
+    if args.provider in ("ltx", "wan5b", "wan22-5b") and not workflow:
+        workflow = "ltx" if args.provider == "ltx" else "wan22-5b"
     return render_episode(
         _project(args),
         _episode(args),
         provider_name=args.provider,
         max_tries=args.max_tries,
         retry_failed=args.retry_failed,
+        workflow=workflow,
     )
 
 
@@ -137,8 +142,67 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         no_freeze=args.no_freeze,
         allow_human=args.allow_human_accept,
         allow_fail=args.allow_fail,
+        preset_name=args.preset,
     )
     print(path)
+    return 0
+
+
+def cmd_write(args: argparse.Namespace) -> int:
+    from satrcut.llm import get_llm
+    from satrcut.write import write_episode
+
+    series = load_series(_project(args))
+    plan = write_episode(
+        series,
+        _episode(args),
+        premise=args.premise,
+        llm=get_llm(args.provider),
+        episodes=max(args.episodes, _episode(args)),
+    )
+    errors = 0
+    print(f"wrote season.json and episode {plan['episode']} ({plan.get('emotional_beat')})")
+    print(f"autofix passes: {plan.get('autofix_passes', 0)}")
+    return errors
+
+
+def cmd_registry(args: argparse.Namespace) -> int:
+    from satrcut.providers.comfyui_wan import workflow
+    from satrcut.providers.workflows import with_identity
+    from satrcut.registry import apply_saved_plan, lock_for, registry_document
+
+    series = load_series(_project(args))
+    if args.registry_cmd == "show":
+        print(json.dumps(registry_document(series), indent=2, ensure_ascii=False))
+        return 0
+    plan = apply_saved_plan(series, _episode(args))
+    print(f"stamped identity refs on {episode_plan_path(series.root, _episode(args))}")
+    if args.registry_cmd == "workflow":
+        shot = next(item for item in plan["shots"] if item["id"] == args.shot)
+        locks = [lock_for(series, name.split(" (")[0]) for name in shot.get("faces_visible") or []]
+        graph = with_identity(workflow(shot, "start.png", "end.png", shot["seeds"][0], "satrcut"), locks)
+        out = series.root / "keyframes" / f"{args.shot}_identity_workflow.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(graph, indent=2), encoding="utf-8")
+        print(out)
+    return 0
+
+
+def cmd_studio(args: argparse.Namespace) -> int:
+    from satrcut.studio import main_serve
+
+    main_serve(_project(args), port=args.port)
+    return 0
+
+
+def cmd_dialogue(args: argparse.Namespace) -> int:
+    from satrcut.dialogue import route_saved
+
+    _plan, notes = route_saved(_project(args), _episode(args))
+    if not notes:
+        print("no lines needed to move")
+    for note in notes:
+        print(note)
     return 0
 
 
@@ -175,10 +239,14 @@ def cmd_service_run(args: argparse.Namespace) -> int:
 
 
 def cmd_lipsync(_args: argparse.Namespace) -> int:
+    from satrcut.dialogue import plugins
     from satrcut.lipsync import get_lipsync
 
     plugin = get_lipsync()
-    print(f"{plugin.name}: available={plugin.available()}")
+    print(f"{plugin.name}: available={plugin.available()} (close-up apply is off)")
+    for item in plugins():
+        decision = item.decide(None)
+        print(f"{item.name}: available={decision.available} decision={decision.decision} min_score={item.min_score}")
     try:
         plugin.apply(Path("."), Path("."), Path("."))
     except LipSyncUnavailable as exc:
@@ -246,7 +314,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     render = sub.add_parser("render", help="resume-safe render for one episode")
     _add_episode(render)
-    render.add_argument("--provider", choices=("mock", "comfyui"), default=None)
+    render.add_argument("--provider", choices=("mock", "comfyui", "fal", "replicate", "ltx", "wan5b"), default=None)
+    render.add_argument("--workflow", choices=("wan22-a14b", "wan22-5b", "ltx", "wan22-a14b-identity"), default=None)
     render.add_argument("--max-tries", type=int, default=4)
     render.add_argument("--retry-failed", action="store_true")
     render.set_defaults(func=cmd_render)
@@ -264,7 +333,37 @@ def build_parser() -> argparse.ArgumentParser:
     built.add_argument("--no-freeze", action="store_true")
     built.add_argument("--allow-human-accept", action="store_true")
     built.add_argument("--allow-fail", action="store_true")
+    built.add_argument("--preset", choices=("master", "tiktok", "youtube_shorts", "reels", "reelshort"), default=None)
     built.set_defaults(func=cmd_assemble)
+
+    write = sub.add_parser("write", help="bible to a lint-clean shot plan")
+    _add_episode(write)
+    write.add_argument("--provider", choices=("mock", "openai", "ollama"), default="mock")
+    write.add_argument("--premise", default="A secret told in close-ups.")
+    write.add_argument("--episodes", type=int, default=1)
+    write.set_defaults(func=cmd_write)
+
+    registry = sub.add_parser("registry", help="sheets, wardrobe, and identity templates")
+    registry_sub = registry.add_subparsers(dest="registry_cmd", required=True)
+    show = registry_sub.add_parser("show")
+    show.set_defaults(func=cmd_registry, registry_cmd="show")
+    apply = registry_sub.add_parser("apply")
+    _add_episode(apply)
+    apply.set_defaults(func=cmd_registry, registry_cmd="apply")
+    graph = registry_sub.add_parser("workflow")
+    _add_episode(graph)
+    graph.add_argument("--shot", required=True)
+    graph.set_defaults(func=cmd_registry, registry_cmd="workflow")
+
+    studio = sub.add_parser("studio", help="local review dashboard on 127.0.0.1")
+    studio.add_argument("--port", type=int, default=8765)
+    studio.set_defaults(func=cmd_studio)
+
+    dialogue = sub.add_parser("dialogue", help="move lines off a mouth that cannot sync")
+    dialogue_sub = dialogue.add_subparsers(dest="dialogue_cmd", required=True)
+    route = dialogue_sub.add_parser("route")
+    _add_episode(route)
+    route.set_defaults(func=cmd_dialogue)
 
     status = sub.add_parser("status", help="per-shot attempt table")
     _add_episode(status)

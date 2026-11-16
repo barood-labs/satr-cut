@@ -1,6 +1,6 @@
 # Satr Cut
 
-Satr Cut is a production CLI for serialized vertical micro-dramas: 9:16, about one to two minutes an episode, a hook in the first three seconds, and a cliffhanger. It is not a canvas and it does not turn one idea into one MP4.
+Satr Cut is a production CLI for serialized vertical micro-dramas: 9:16, about one to two minutes an episode, a hook in the first three seconds, and a cliffhanger. It is not a canvas and it does not turn one idea into one MP4. Version 0.2.0.
 
 The shot plan is the contract. `satrcut lint` rejects prompts that a cfg-1 video model will draw wrong. `satrcut render` checkpoints every attempt and resumes after the GPU host reboots. `satrcut qc` scores the take. `satrcut assemble` builds one checksummed 1080×1920 file.
 
@@ -65,6 +65,34 @@ A second `satrcut render` skips every shot whose manifest is already PASS. A kil
 | `satrcut service install` | systemd unit and a Windows Task Scheduler XML |
 | `satrcut lipsync` | Tells you lip-sync is off |
 | `satrcut models` | Public Wan filenames and checksums. Nothing is downloaded |
+| `satrcut write -e 1` | Bible to a season arc, beats, and a plan that passes lint. Mock LLM by default |
+| `satrcut registry show` | Sheets, wardrobe, identity method |
+| `satrcut registry workflow -e 1 --shot 1-hook` | ComfyUI template with IP-Adapter or PuLID slots |
+| `satrcut studio` | Local review page on 127.0.0.1: timeline, QC, approve / reject / retake, queue, GPU-hours |
+| `satrcut dialogue route -e 1` | Move a line to listener / off-screen when lip-sync is not allowed |
+| `satrcut assemble -e 1 --preset reelshort` | 1080×1920, -14 LUFS, safe-area subtitles. Also `tiktok`, `youtube_shorts`, `reels` |
+| `satrcut render --provider comfyui --workflow ltx` | Same runner, LTX-Video or `wan22-5b` template. `fal` and `replicate` build a payload and do not POST |
+
+OpenAI-compatible and Ollama writers are optional (`--provider openai` needs `SATRCUT_LLM_API_KEY`, `--provider ollama` needs a local daemon). The mock writer needs neither. fal and Replicate read `FAL_KEY` and `REPLICATE_API_TOKEN` only to decide that they are configured. v0.2 does not submit those jobs, so a key cannot spend credit. LatentSync and MuseTalk stay gated: under a mouth-sync score of 0.75 the line is routed off the face, and the model binary is not run.
+
+```bash
+satrcut write -e 1 --provider mock
+satrcut lint -e 1
+satrcut render -e 1 --provider mock
+satrcut assemble -e 1 --preset reelshort
+satrcut studio
+```
+
+Docker, with ffmpeg and Noto fonts:
+
+```bash
+docker build -t satrcut .
+docker run --rm -v "$PWD":/work satrcut write -e 1 --provider mock
+```
+
+A Windows ComfyUI host can run `scripts/setup-comfy-windows.ps1 -ComfyRoot D:\ComfyUI\ComfyUI`. It installs the CLI and writes a start script. It does not download weights.
+
+The docs site is the `docs/` tree, built with MkDocs (`mkdocs build`). GitHub Pages deploys it from the `docs` workflow on `main`. The package is PyPI-shaped (`python -m build`) and is not uploaded from this repo.
 
 ## Why this exists
 
@@ -149,7 +177,10 @@ Keys, if a later provider needs them, come only from the environment (`FAL_KEY`,
 ## Docs
 
 - [Plan format](docs/PLAN_FORMAT.md)
-- [Providers](docs/PROVIDERS.md), including the lip-sync stub
+- [Write](docs/WRITE.md)
+- [Providers](docs/PROVIDERS.md)
+- [Studio](docs/STUDIO.md)
+- [Export and subtitles](docs/EXPORT.md), including the lip-sync stub
 - [Failure taxonomy](docs/FAILURE_TAXONOMY.md)
 - [Why shots fail](docs/ROOT_CAUSES.md)
 - [Style rules](docs/STYLE_RULES.md)

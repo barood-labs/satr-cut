@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Satr Cut studio</title>
+<style>
+  :root { color-scheme: dark; --bg: #12141a; --card: #1c2030; --line: #2c3348; --text: #f4f1ea; --muted: #a7adbe; --yellow: #f5d028; --ok: #7dcea0; --bad: #e07a7a; --wait: #e0b15a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 "Iowan Old Style", Palatino, Georgia, serif; background: var(--bg); color: var(--text); }
+  header { display: flex; justify-content: space-between; gap: 16px; align-items: end; padding: 22px 28px 8px; }
+  h1 { font-size: 28px; margin: 0; letter-spacing: -0.03em; }
+  h1 span { color: var(--yellow); }
+  .meta { color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; }
+  main { padding: 8px 28px 40px; }
+  .timeline { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 18px; }
+  .tick { min-width: 92px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+  .tick b { display: block; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; }
+  .tick small { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  article { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 12px; }
+  article header { padding: 0; display: flex; justify-content: space-between; align-items: center; }
+  .id { font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 650; }
+  .badge { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 7px; border-radius: 999px; background: #2a3148; }
+  .badge.pass, .badge.trim { background: #1d3b2e; color: var(--ok); }
+  .badge.fail, .badge.fail_all, .badge.render_error { background: #3b1d1d; color: var(--bad); }
+  .badge.review, .badge.queued, .badge.in_flight, .badge.partial { background: #3b3218; color: var(--wait); }
+  p { margin: 8px 0; }
+  .reasons { color: var(--bad); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; min-height: 1.2em; }
+  .row { display: flex; gap: 8px; margin-top: 10px; }
+  button { font: 13px/1 ui-sans-serif, system-ui, sans-serif; background: #2a3144; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; cursor: pointer; }
+  button.primary { background: var(--yellow); color: #1a1402; border-color: transparent; font-weight: 650; }
+  aside { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .panel h2 { margin: 0 0 8px; font-size: 16px; }
+  @media (max-width: 800px) { aside { grid-template-columns: 1fr; } header, main { padding-left: 16px; padding-right: 16px; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Satr <span>Cut</span> studio</h1>
+    <div class="meta" id="subtitle">localhost review</div>
+  </div>
+  <div class="meta" id="costline"></div>
+</header>
+<main>
+  <div class="timeline" id="timeline"></div>
+  <div class="grid" id="cards"></div>
+  <aside>
+    <section class="panel"><h2>Queue</h2><div id="queue" class="meta">Nothing waiting.</div></section>
+    <section class="panel"><h2>This episode</h2><div id="summary" class="meta"></div></section>
+  </aside>
+</main>
+<script>
+const episode = 1;
+function badge(status) {
+  const key = String(status || "queued").toLowerCase();
+  return `<span class="badge ${key}">${key}</span>`;
+}
+async function load() {
+  const data = await (await fetch(`/api/episode/${episode}`)).json();
+  document.getElementById("subtitle").textContent =
+    `${data.title} · beat ${data.emotional_beat || "—"} · ending ${data.ending || "—"}`;
+  const cost = data.cost || {};
+  document.getElementById("costline").textContent =
+    `${cost.gpu_hours || 0} GPU h · $${cost.usd || 0} estimate · not a charge`;
+  document.getElementById("timeline").innerHTML = (data.cuts || []).map(cut =>
+    `<div class="tick"><b>${cut.source || ""}</b><small>${cut.dur}s · ${cut.framing || ""}</small></div>`
+  ).join("");
+  document.getElementById("cards").innerHTML = (data.shots || []).map(shot => `
+    <article data-id="${shot.id}">
+      <header><span class="id">${shot.id}</span>${badge(shot.verdict || shot.status)}</header>
+      <p>${shot.speaker ? shot.speaker + ": " : ""}${shot.line || "No line. " + (shot.shot_type || "")}</p>
+      <div class="reasons">${(shot.reasons || []).join(" · ")}</div>
+      <div class="meta">seed ${shot.seed ?? "—"} · try ${shot.attempt ?? "—"} · ${shot.review ? shot.review.action : "no review"}</div>
+      <div class="row">
+        <button class="primary" data-act="approve">Approve</button>
+        <button data-act="reject">Reject</button>
+        <button data-act="retake">Retake</button>
+      </div>
+    </article>`).join("");
+  const waiting = data.queue || [];
+  document.getElementById("queue").textContent = waiting.length
+    ? waiting.map(shot => `${shot.id} (${shot.status})`).join(", ")
+    : "Nothing waiting.";
+  document.getElementById("summary").textContent =
+    `${(data.shots || []).length} shots · runtime ${data.runtime_s || "—"}s · rate $${cost.gpu_usd_per_hour || 0}/GPU-hour`;
+}
+document.getElementById("cards").addEventListener("click", async (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  const card = button.closest("article");
+  const response = await fetch(`/api/episode/${episode}/shot/${card.dataset.id}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({action: button.dataset.act}),
+  });
+  const body = await response.json();
+  if (!response.ok) { alert(body.error || "Could not update the shot"); return; }
+  load();
+});
+load();
+</script>
+</body>
+</html>

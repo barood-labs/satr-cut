@@ -170,6 +170,7 @@ def render_episode(
     qc_fn: QCFunc | None = None,
     skip_lint: bool = False,
     retry_failed: bool = False,
+    workflow: str | None = None,
 ) -> int:
     project = project.resolve()
     series = load_series(project)
@@ -177,6 +178,9 @@ def render_episode(
     if not plan_path.is_file():
         raise SatrcutError(f"no plan at {plan_path}. Run: satrcut plan generate -e {episode}")
     plan = read_json(plan_path)
+    if workflow:
+        for shot in plan.get("shots") or []:
+            shot["workflow"] = workflow
     if not skip_lint:
         report = lint_plan(plan, project, episode=episode)
         if report.errors:

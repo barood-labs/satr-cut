@@ -1,0 +1,28 @@
+name: Feature
+description: A gap you want the production CLI to close
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: job
+    attributes:
+      label: The job
+      description: What a 30-episode series still cannot do. No private story text and no keys.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - write
+        - lint
+        - registry
+        - render
+        - qc
+        - assemble
+        - studio
+        - providers
+        - subtitles
+    validations:
+      required: true
