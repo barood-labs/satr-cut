@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "satrcut"
-version = "0.1.0"
+version = "0.2.0"
 description = "Production CLI for vertical 9:16 micro-drama: lint a shot plan, resume ComfyUI renders, QC every take, assemble a 1080x1920 episode."
 readme = "README.md"
 license = { text = "MIT" }
@@ -29,6 +29,7 @@ dependencies = [
 qc = ["opencv-python-headless>=4.9", "mediapipe>=0.10.14"]
 asr = ["faster-whisper>=1.0"]
 dev = ["pytest>=8"]
+docs = ["mkdocs>=1.6", "mkdocs-material>=9"]
 
 [project.scripts]
 satrcut = "satrcut.cli:main"

@@ -1,0 +1,28 @@
+site_name: Satr Cut
+site_description: Open-source production CLI for vertical micro-dramas
+site_url: https://barood-labs.github.io/satr-cut/
+repo_url: https://github.com/barood-labs/satr-cut
+repo_name: barood-labs/satr-cut
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: yellow
+    accent: amber
+nav:
+  - Home: index.md
+  - Plan format: PLAN_FORMAT.md
+  - Write: WRITE.md
+  - Providers: PROVIDERS.md
+  - Studio: STUDIO.md
+  - Export and subtitles: EXPORT.md
+  - DramaBox preset: DRAMABOX.md
+  - Failure taxonomy: FAILURE_TAXONOMY.md
+  - Why shots fail: ROOT_CAUSES.md
+  - Style rules: STYLE_RULES.md
+  - Architecture: ARCHITECTURE.md
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true
+strict: true

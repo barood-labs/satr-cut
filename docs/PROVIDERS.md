@@ -109,3 +109,20 @@ Do not auto-apply MuseTalk, LatentSync, or InfiniteTalk to a close-up. That pass
 - Vendor ComfyUI or any other GPL tree.
 - Download gated weights with a baked-in token.
 - Delete `.satrcut/STOP` or `.satrcut/MAINT_WINDOW`.
+- Submit a paid request. fal and Replicate build a payload and stop. v0.2 does not POST, so a key in the environment cannot spend credit.
+
+## Capability matrix
+
+| Provider | Where it runs | Keys | Offline | Workflow | Identity | Notes |
+|---|---|---|---|---|---|---|
+| `mock` | local | none | yes | — | labeled stills | Default. CI uses this. |
+| `comfyui` | local HTTP | none | yes | `wan22-a14b` | start + end keyframes | Wan2.2 I2V A14B. ComfyUI is not vendored. |
+| `comfyui --workflow wan22-5b` | local HTTP | none | yes | `wan22-5b` | start frame | Wan2.2 TI2V 5B template. |
+| `comfyui --workflow ltx` | local HTTP | none | yes | `ltx` | start frame | LTX-Video template. Needs the LTX node pack on the server. |
+| `comfyui --workflow wan22-a14b-identity` | local HTTP | none | yes | identity | IP-Adapter, PuLID, or LoRA slot | Custom nodes. Export with `satrcut registry workflow`. |
+| `fal` | cloud | `FAL_KEY` | no | — | image path in the payload | Payload only. No POST in v0.2. |
+| `replicate` | cloud | `REPLICATE_API_TOKEN` | no | — | prompt + seed | Payload only. No POST in v0.2. |
+
+`satrcut render --provider ltx` and `--provider wan5b` are the ComfyUI provider with that workflow selected.
+
+Lip-sync plugins (`latentsync`, `musetalk`) are not video providers. They stay off unless `SATRCUT_LATENTSYNC` or `SATRCUT_MUSETALK` points at an install, and even then a mouth-sync score under 0.75 routes the line off the speaker's face instead of applying a model.

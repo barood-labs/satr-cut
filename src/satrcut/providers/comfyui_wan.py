@@ -250,7 +250,9 @@ class ComfyUIWanProvider:
         start_name = _upload(self.url, request.start_frame)
         end_name = _upload(self.url, request.end_frame) if request.end_frame.exists() else None
         prefix = f"satrcut_{shot['id']}_s{request.seed}"
-        graph = workflow(shot, start_name, end_name, request.seed, prefix)
+        from satrcut.providers.workflows import build_graph
+
+        graph = build_graph(str(shot.get("workflow") or "wan22-a14b"), shot, start_name, end_name, request.seed, prefix)
         request.out_dir.mkdir(parents=True, exist_ok=True)
         (request.out_dir / "workflow.json").write_text(json.dumps(graph, indent=2), encoding="utf-8")
         body = json.dumps({"prompt": graph, "client_id": uuid.uuid4().hex}).encode()
