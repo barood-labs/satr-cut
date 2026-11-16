@@ -159,11 +159,33 @@ def cmd_write(args: argparse.Namespace) -> int:
         premise=args.premise,
         llm=get_llm(args.provider),
         episodes=max(args.episodes, _episode(args)),
+        trope=args.trope,
     )
     errors = 0
     print(f"wrote season.json and episode {plan['episode']} ({plan.get('emotional_beat')})")
     print(f"autofix passes: {plan.get('autofix_passes', 0)}")
     return errors
+
+
+def cmd_score(args: argparse.Namespace) -> int:
+    from satrcut.score import score_episode
+
+    report = score_episode(_project(args), _episode(args))
+    print(f"dramabox score  episode {report['episode']}  {'PASS' if report['ok'] else 'MISS'}")
+    for key, value in report["checks"].items():
+        print(f"  {key}: {value}")
+    for miss in report["misses"]:
+        print(f"  miss  {miss}")
+    return 0 if report["ok"] else 1
+
+
+def cmd_package(args: argparse.Namespace) -> int:
+    from satrcut.package import package_episode
+
+    made = package_episode(_project(args), _episode(args))
+    for key, value in made.items():
+        print(f"{key}: {value}")
+    return 0
 
 
 def cmd_registry(args: argparse.Namespace) -> int:
@@ -333,7 +355,7 @@ def build_parser() -> argparse.ArgumentParser:
     built.add_argument("--no-freeze", action="store_true")
     built.add_argument("--allow-human-accept", action="store_true")
     built.add_argument("--allow-fail", action="store_true")
-    built.add_argument("--preset", choices=("master", "tiktok", "youtube_shorts", "reels", "reelshort"), default=None)
+    built.add_argument("--preset", choices=("dramabox", "master", "tiktok", "youtube_shorts", "reels", "reelshort"), default=None)
     built.set_defaults(func=cmd_assemble)
 
     write = sub.add_parser("write", help="bible to a lint-clean shot plan")
@@ -341,7 +363,20 @@ def build_parser() -> argparse.ArgumentParser:
     write.add_argument("--provider", choices=("mock", "openai", "ollama"), default="mock")
     write.add_argument("--premise", default="A secret told in close-ups.")
     write.add_argument("--episodes", type=int, default=1)
+    write.add_argument(
+        "--trope",
+        choices=("revenge", "billionaire", "contract", "second-chance", "werewolf"),
+        default="revenge",
+    )
     write.set_defaults(func=cmd_write)
+
+    scored = sub.add_parser("score", help="rate an episode against the dramabox preset")
+    _add_episode(scored)
+    scored.set_defaults(func=cmd_score)
+
+    packaged = sub.add_parser("package", help="title card, poster, and a trailer of the hooks")
+    _add_episode(packaged)
+    packaged.set_defaults(func=cmd_package)
 
     registry = sub.add_parser("registry", help="sheets, wardrobe, and identity templates")
     registry_sub = registry.add_subparsers(dest="registry_cmd", required=True)

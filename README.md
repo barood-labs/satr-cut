@@ -70,7 +70,10 @@ A second `satrcut render` skips every shot whose manifest is already PASS. A kil
 | `satrcut registry workflow -e 1 --shot 1-hook` | ComfyUI template with IP-Adapter or PuLID slots |
 | `satrcut studio` | Local review page on 127.0.0.1: timeline, QC, approve / reject / retake, queue, GPU-hours |
 | `satrcut dialogue route -e 1` | Move a line to listener / off-screen when lip-sync is not allowed |
-| `satrcut assemble -e 1 --preset reelshort` | 1080×1920, -14 LUFS, safe-area subtitles. Also `tiktok`, `youtube_shorts`, `reels` |
+| `satrcut assemble -e 1` | Default `dramabox` look when the series style is dramabox: warm grade, bold yellow subs, -14 LUFS. Also `reelshort`, `tiktok`, `youtube_shorts`, `reels` |
+| `satrcut score -e 1` | Hook, pacing, cliffhanger, subtitle safe area, loudness. Exit 1 on a miss |
+| `satrcut package -e 1` | Title card, poster, thumbnail, trailer cut from each episode's hook |
+| `satrcut write -e 1 --trope revenge` | 60–90s episode. Also `billionaire`, `contract`, `second-chance`, `werewolf` |
 | `satrcut render --provider comfyui --workflow ltx` | Same runner, LTX-Video or `wan22-5b` template. `fal` and `replicate` build a payload and do not POST |
 
 OpenAI-compatible and Ollama writers are optional (`--provider openai` needs `SATRCUT_LLM_API_KEY`, `--provider ollama` needs a local daemon). The mock writer needs neither. fal and Replicate read `FAL_KEY` and `REPLICATE_API_TOKEN` only to decide that they are configured. v0.2 does not submit those jobs, so a key cannot spend credit. LatentSync and MuseTalk stay gated: under a mouth-sync score of 0.75 the line is routed off the face, and the model binary is not run.

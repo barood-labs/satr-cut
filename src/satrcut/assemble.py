@@ -65,7 +65,7 @@ def freeze(project: Path, episode: int, *, allow_human: bool = False, allow_fail
     takes: list[dict[str, Any]] = []
     folder = job_dir_for(project, episode)
     for cut in plan.get("cuts") or []:
-        if cut.get("source") == "card:time":
+        if str(cut.get("source") or "").startswith("card:"):
             continue
         shot_id = _shot_id(cut)
         manifest = folder / shot_id / "manifest.json"
@@ -115,7 +115,7 @@ def freeze(project: Path, episode: int, *, allow_human: bool = False, allow_fail
         "frozen": now_iso(),
         "delivery": plan.get("delivery") or {"width": 1080, "height": 1920, "fps": 24},
         "takes": takes,
-        "cut_ids": [_shot_id(cut) if cut.get("source") != "card:time" else "card:time" for cut in plan.get("cuts") or []],
+        "cut_ids": [cut.get("source") if str(cut.get("source") or "").startswith("card:") else _shot_id(cut) for cut in plan.get("cuts") or []],
         "problems": problems,
     }
     atomic_write_json(manifest_path(project, episode), document)
@@ -133,12 +133,12 @@ def verify(project: Path, document: dict[str, Any]) -> list[str]:
     if sha256_file(plan_path) != document.get("plan_sha256"):
         errors.append("shot plan changed since freeze")
     plan = read_json(plan_path)
-    expected = [_shot_id(cut) if cut.get("source") != "card:time" else "card:time" for cut in plan.get("cuts") or []]
+    expected = [cut.get("source") if str(cut.get("source") or "").startswith("card:") else _shot_id(cut) for cut in plan.get("cuts") or []]
     if expected != list(document.get("cut_ids") or []):
         errors.append("cut list changed since freeze")
     by_id = {row["shot_id"]: row for row in document.get("takes") or []}
     for cut in plan.get("cuts") or []:
-        if cut.get("source") == "card:time":
+        if str(cut.get("source") or "").startswith("card:"):
             continue
         shot_id = _shot_id(cut)
         row = by_id.get(shot_id)
@@ -184,7 +184,7 @@ def write_ass(
         "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        f"Style: Sub,{font},{sub['size']},{sub['colour']},&H000000FF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,{sub['outline']},0,{sub['align']},{margins['margin_l']},{margins['margin_r']},{margins['margin_v']},1",
+        f"Style: Sub,{font},{int(margins.get('size') or sub['size'])},{sub['colour']},&H000000FF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,{int(margins.get('outline') or sub['outline'])},0,{sub['align']},{margins['margin_l']},{margins['margin_r']},{margins['margin_v']},1",
         "Style: Name,DejaVu Sans,68,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,2,0,8,40,40,200,1",
         "Style: Time,DejaVu Serif,78,&H000000FF,&H000000FF,&H00000000,&H64000000,0,-1,0,0,100,100,0,0,1,2,0,5,40,40,0,1",
         "",
@@ -193,7 +193,7 @@ def write_ass(
     ]
     for cut in plan.get("cuts") or []:
         start = float(cut.get("at") or 0)
-        if cut.get("source") == "card:time" and cut.get("text"):
+        if str(cut.get("source") or "").startswith("card:") and cut.get("text"):
             lines.append(
                 f"Dialogue: 1,{_ass_time(start)},{_ass_time(start + float(cut['dur']))},Time,,0,0,0,,{{\\fad(120,180)}}{cut['text']}"
             )
@@ -269,7 +269,17 @@ def static_checks(project: Path, plan: dict[str, Any]) -> list[str]:
     return issues
 
 
-def _encode_segment(cut: dict[str, Any], src: Path | None, dest: Path, width: int, height: int, fps: int, font: Path) -> None:
+def _encode_segment(
+    cut: dict[str, Any],
+    src: Path | None,
+    dest: Path,
+    width: int,
+    height: int,
+    fps: int,
+    font: Path,
+    *,
+    look: str = "",
+) -> None:
     duration = float(cut["dur"])
     preset = x264_preset()
     if cut.get("source") == "card:time" or src is None:
@@ -293,18 +303,18 @@ def _encode_segment(cut: dict[str, Any], src: Path | None, dest: Path, width: in
     span = max(duration, 0.1)
     zoom = f"({z0}+({z1}-{z0})*min(t/{span:.4f}\\,1))"
     grade = style.GRADE_FX.get(str(cut.get("grade") or "neutral"), style.GRADE_FX["neutral"])
-    video_filter = ",".join(
-        [
-            f"fps={fps}",
-            f"scale={width}:{height}:force_original_aspect_ratio=increase",
-            f"crop={width}:{height}",
-            f"scale=w='trunc({width}*{zoom}/2)*2':h='trunc({height}*{zoom}/2)*2':eval=frame",
-            f"crop={width}:{height}:(iw-{width})/2:(ih-{height})/2",
-            grade,
-            "setsar=1",
-            "format=yuv420p",
-        ]
-    )
+    filters = [
+        f"fps={fps}",
+        f"scale={width}:{height}:force_original_aspect_ratio=increase",
+        f"crop={width}:{height}",
+        f"scale=w='trunc({width}*{zoom}/2)*2':h='trunc({height}*{zoom}/2)*2':eval=frame",
+        f"crop={width}:{height}:(iw-{width})/2:(ih-{height})/2",
+        grade,
+    ]
+    if look:
+        filters.append(look)
+    filters += ["setsar=1", "format=yuv420p"]
+    video_filter = ",".join(filters)
     require_ok(
         [
             "ffmpeg", "-y", "-loglevel", "error",
@@ -428,14 +438,14 @@ def assemble(
         segments: list[Path] = []
         for index, cut in enumerate(cuts):
             dest = tmp / f"seg_{index:02d}.mp4"
-            if cut.get("source") == "card:time":
-                _encode_segment(cut, None, dest, width, height, fps, font)
+            if str(cut.get("source") or "").startswith("card:"):
+                _encode_segment(cut, None, dest, width, height, fps, font, look=str(spec.get("look") or ""))
             else:
                 row = takes[_shot_id(cut)]
                 local = dict(cut)
                 if row.get("verdict") == "TRIM" and row.get("trim"):
                     local["_trim"] = row["trim"]
-                _encode_segment(local, project / row["file"], dest, width, height, fps, font)
+                _encode_segment(local, project / row["file"], dest, width, height, fps, font, look=str(spec.get("look") or ""))
             segments.append(dest)
         raw = tmp / "raw.mp4"
         cmd = ["ffmpeg", "-y", "-loglevel", "error"]

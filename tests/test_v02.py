@@ -36,8 +36,11 @@ def test_write_mock_lints_and_autofix_repairs_hands(tmp_path: Path):
     assert plan["ending"] == "uncompleted_action"
     assert plan["cuts"][0]["beat"] == "hook"
     assert plan["cuts"][0]["dur"] <= 3
+    assert 60 <= plan["runtime_s"] <= 90
+    assert any(cut.get("source") == "card:next" for cut in plan["cuts"])
+    assert any(cut.get("beat") == "reversal" for cut in plan["cuts"])
     for cut in plan["cuts"]:
-        if cut.get("source") == "card:time" or cut.get("beat") == "hook":
+        if str(cut.get("source") or "").startswith("card:") or cut.get("beat") == "hook":
             continue
         assert 1.5 <= float(cut["dur"]) <= 2.5
     poisoned = json.loads(json.dumps(plan))

@@ -25,6 +25,75 @@ from satrcut.util import atomic_write_json
 
 BEATS = ("rupture", "confession", "threat", "reversal", "longing")
 SAFE_CAMERA = "Vertical close-up from the collarbones up. The camera creeps in slowly."
+TROPES = {
+    "revenge": {
+        "emotional_beat": "rupture",
+        "stakes_line": "You took the company.",
+        "last_line": "Then I take the night.",
+        "paywall_line": "Open the door. I dare you.",
+        "time_card": "Three Nights Earlier",
+        "title": "What was taken",
+    },
+    "billionaire": {
+        "emotional_beat": "reversal",
+        "stakes_line": "So this is who you are.",
+        "last_line": "The name on the glass is mine.",
+        "paywall_line": "Say my name.",
+        "time_card": "The Night of the Gala",
+        "title": "The name on the glass",
+    },
+    "contract": {
+        "emotional_beat": "confession",
+        "stakes_line": "Sign it, or walk away.",
+        "last_line": "I already signed.",
+        "paywall_line": "Clause seven. Read it.",
+        "time_card": "The Morning of the Terms",
+        "title": "The terms",
+    },
+    "second-chance": {
+        "emotional_beat": "longing",
+        "stakes_line": "I came back.",
+        "last_line": "Then say it again.",
+        "paywall_line": "Stay. Just stay.",
+        "time_card": "One Year Later",
+        "title": "Again",
+    },
+    "werewolf": {
+        "emotional_beat": "threat",
+        "stakes_line": "Your eyes changed.",
+        "last_line": "Run, or stand with me.",
+        "paywall_line": "The moon is up.",
+        "time_card": "The Night of the Turning",
+        "title": "Under the moon",
+    },
+}
+
+
+def paywall_episode(number: int) -> bool:
+    """A paywall cliffhanger every 6 episodes, inside the 5–8 episode band."""
+    return number > 0 and number % 6 == 0
+
+
+def trope_brief(name: str, number: int) -> dict[str, Any]:
+    key = (name or "revenge").lower().replace("_", "-")
+    if key in ("hidden-identity", "hidden-identity-billionaire"):
+        key = "billionaire"
+    if key in ("contract-marriage", "marriage"):
+        key = "contract"
+    if key in ("second_chance", "secondchance"):
+        key = "second-chance"
+    if key in ("fantasy", "wolf"):
+        key = "werewolf"
+    if key not in TROPES:
+        known = ", ".join(TROPES)
+        raise SatrcutError(f"unknown story template {name!r} ({known})")
+    brief = dict(TROPES[key])
+    brief["trope"] = key
+    brief["paywall"] = paywall_episode(number)
+    if brief["paywall"]:
+        brief["last_line"] = brief["paywall_line"]
+        brief["emotional_beat"] = "threat"
+    return brief
 
 
 def _copy_series(series: Series) -> Series:
@@ -98,43 +167,44 @@ def episode_sheet(series: Series, number: int, brief: dict[str, Any]) -> dict[st
         row.update(extra)
         return row
 
-    shots = [
+    shots: list[dict[str, Any]] = [
         face("1-hook", second, "ecu", 45, "desire", beat="hook", scene=scene_a, place=place_a),
-        face("2-ecu", lead, "ecu", 37, "danger", scene=scene_a, place=place_a),
-        face("2-react", second, "cu", 33, "danger", scene=scene_a, place=place_a),
-        face("3-cu", lead, "cu", 37, "danger", scene=scene_a, place=place_a),
+    ]
+    clock = 45 / 16 + 1.2
+    index = 0
+    who_cycle = (lead, second, lead, second)
+    while clock < 68:
+        who = who_cycle[index % len(who_cycle)]
+        shot_id = f"b{index:02d}"
+        if index % 8 == 7:
+            shots.append(
+                {
+                    "id": shot_id,
+                    "scene": scene_a,
+                    "place": place_a,
+                    "shot_type": "insert",
+                    "kind": "insert",
+                    "frames": 33,
+                    "in_frame": [],
+                    "faces_visible": [],
+                    "grade": "danger",
+                    "anchor": "keyed",
+                    "line_mode": "insert",
+                    "camera": "Vertical macro of a dark phone face-down on wet ground. The camera creeps in slowly.",
+                    "action": "The dark phone screen wakes with a bright glow that blooms across the wet ground.",
+                    "motion": "glow blooms; camera creeps in",
+                }
+            )
+        else:
+            extra: dict[str, Any] = {"scene": scene_a, "place": place_a}
+            if index == 3:
+                extra.update(line_mode="listener", speaker=f"{na} (O.S.)", line=stakes, subtitle=stakes)
+            shots.append(face(shot_id, who, "cu" if index % 3 else "ecu", 33, "danger", **extra))
+        clock += 33 / 16
+        index += 1
+    shots.append(
         {
-            "id": "3-insert",
-            "scene": scene_a,
-            "place": place_a,
-            "shot_type": "insert",
-            "kind": "insert",
-            "frames": 33,
-            "in_frame": [],
-            "faces_visible": [],
-            "grade": "danger",
-            "anchor": "keyed",
-            "line_mode": "insert",
-            "camera": "Vertical macro of a dark phone face-down on wet ground. The camera creeps in slowly.",
-            "action": "The dark phone screen wakes with a bright glow that blooms across the wet ground.",
-            "motion": "glow blooms; camera creeps in",
-        },
-        face(
-            "3-os",
-            second,
-            "cu",
-            37,
-            "danger",
-            scene=scene_a,
-            place=place_a,
-            line_mode="listener",
-            speaker=f"{na} (O.S.)",
-            line=stakes,
-            subtitle=stakes,
-        ),
-        face("4-cu", second, "cu", 33, "danger", scene=scene_a, place=place_a),
-        {
-            "id": "5-edge",
+            "id": "end-edge",
             "scene": scene_b,
             "place": place_b,
             "shot_type": "insert",
@@ -145,15 +215,14 @@ def episode_sheet(series: Series, number: int, brief: dict[str, Any]) -> dict[st
             "grade": "danger",
             "anchor": "keyed",
             "line_mode": "vo",
-            "speaker": f"{nc} (O.S.)",
-            "line": "Wait.",
-            "subtitle": "Wait.",
             "camera": "Vertical close shot of a painted metal panel. The camera creeps in slowly.",
             "action": "A stripe of warm light widens along the edge of the painted metal panel, dust turning in the beam.",
             "motion": "light stripe widens; camera creeps in",
-        },
+        }
+    )
+    shots.append(
         face(
-            "5-end",
+            "end-face",
             third,
             "cu",
             37,
@@ -165,8 +234,9 @@ def episode_sheet(series: Series, number: int, brief: dict[str, Any]) -> dict[st
             line=last,
             subtitle=last,
             end_on="line_end",
-        ),
-    ]
+            beat="cliffhanger",
+        )
+    )
     # One character: the off-screen speaker must not be the face in frame.
     if lead == second:
         for shot in shots:
@@ -174,8 +244,10 @@ def episode_sheet(series: Series, number: int, brief: dict[str, Any]) -> dict[st
                 shot["speaker"] = "Narrator (O.S.)"
     return {
         "episode": number,
-        "title": beat[:1].upper() + beat[1:],
-        "ending": "uncompleted_action",
+        "title": str(brief.get("title") or beat[:1].upper() + beat[1:]),
+        "trope": brief.get("trope") or "",
+        "paywall": bool(brief.get("paywall")),
+        "ending": "reveal" if brief.get("paywall") else "uncompleted_action",
         "emotional_beat": beat,
         "time_card": str(brief.get("time_card") or "Ten Minutes Earlier"),
         "stakes_line": stakes,
@@ -189,20 +261,71 @@ def episode_sheet(series: Series, number: int, brief: dict[str, Any]) -> dict[st
     }
 
 
-def season_arc(series: Series, episodes: int, premise: str, llm: Any | None = None) -> dict[str, Any]:
+def season_arc(series: Series, episodes: int, premise: str, llm: Any | None = None, trope: str = "revenge") -> dict[str, Any]:
     model = llm or MockLLM()
     rows = []
     for number in range(1, episodes + 1):
-        text = model.complete(SYSTEM_WRITE, f"episode: {number}\npremise: {premise}\nseries: {series.name}")
+        text = model.complete(
+            SYSTEM_WRITE,
+            f"episode: {number}\npremise: {premise}\ntrope: {trope}\nseries: {series.name}",
+        )
         try:
             brief = parse_json_object(text)
         except (SatrcutError, ValueError):
-            brief = parse_json_object(MockLLM().complete(SYSTEM_WRITE, f"episode: {number}\npremise: {premise}"))
-        brief["emotional_beat"] = brief.get("emotional_beat") if brief.get("emotional_beat") in BEATS else BEATS[(number - 1) % len(BEATS)]
+            brief = {}
+        brief.update(trope_brief(trope, number))
         brief["episode"] = number
-        brief["cliffhanger"] = "uncompleted_action"
+        brief["cliffhanger"] = "uncompleted_action" if not brief.get("paywall") else "reveal"
+        brief["premise"] = premise
         rows.append(brief)
-    return {"series": series.name, "premise": premise, "provider": getattr(model, "name", "mock"), "episodes": rows}
+    return {
+        "series": series.name,
+        "premise": premise,
+        "trope": trope,
+        "style": "dramabox",
+        "provider": getattr(model, "name", "mock"),
+        "episodes": rows,
+    }
+
+
+def stamp_dramabox(plan: dict[str, Any]) -> dict[str, Any]:
+    """Mark the midpoint reversal and hang a next-episode stinger on the end."""
+    cuts = list(plan.get("cuts") or [])
+    if not cuts:
+        return plan
+    picture = [cut for cut in cuts if not str(cut.get("source") or "").startswith("card:")]
+    if picture:
+        runtime = float(cuts[-1]["at"]) + float(cuts[-1]["dur"])
+        mid = runtime / 2
+        target = min(picture, key=lambda cut: abs((float(cut["at"]) + float(cut["dur"]) / 2) - mid))
+        if target.get("beat") != "hook":
+            target["beat"] = "reversal"
+            shot_id = target.get("shot_id")
+            for shot in plan.get("shots") or []:
+                if shot.get("id") == shot_id:
+                    shot["beat"] = "reversal"
+    end = cuts[-1]
+    if end.get("source") != "card:next":
+        cuts.append(
+            {
+                "n": int(end.get("n") or len(cuts)) + 1,
+                "source": "card:next",
+                "dur": 1.8,
+                "at": round(float(end["at"]) + float(end["dur"]), 4),
+                "framing": "CARD",
+                "grade": "neutral",
+                "text": "Next episode",
+                "faces_visible": [],
+                "push": None,
+                "beat": "stinger",
+            }
+        )
+    plan["cuts"] = cuts
+    plan["runtime_s"] = round(float(cuts[-1]["at"]) + float(cuts[-1]["dur"]), 4)
+    plan["target_runtime_s"] = plan["runtime_s"]
+    plan["style"] = "dramabox"
+    plan["next_episode"] = True
+    return plan
 
 
 def _rebuild_prompt(shot: dict[str, Any]) -> None:
@@ -274,11 +397,12 @@ def write_episode(
     premise: str = "A secret told in close-ups.",
     llm: Any | None = None,
     episodes: int = 1,
+    trope: str = "revenge",
 ) -> dict[str, Any]:
     series = _copy_series(series)
     model = llm or get_llm("mock")
     count = max(episodes, episode)
-    arc = season_arc(series, count, premise, model)
+    arc = season_arc(series, count, premise, model, trope=trope)
     (series.root / "season.json").parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(series.root / "season.json", arc)
     written = []
@@ -291,9 +415,14 @@ def write_episode(
         plan = generate_plan(series, sheet)
         plan["emotional_beat"] = sheet["emotional_beat"]
         plan["premise"] = premise
+        plan["trope"] = sheet.get("trope") or trope
+        plan["paywall"] = bool(sheet.get("paywall"))
+        plan["title"] = sheet.get("title")
+        plan["style"] = "dramabox"
         plan["target_runtime_s"] = plan["runtime_s"]
         plan["plan"] = "satrcut-v0.2"
         plan, passes = autofix(plan, series.root)
+        plan = stamp_dramabox(plan)
         plan["autofix_passes"] = passes
         report = lint_plan(plan, series.root)
         if report.errors:

@@ -55,7 +55,7 @@ EDIT = {
     "slowmo_approach": 0.87,
     "hook_s": (2.5, 3.5),
     "stakes_by_s": 30.0,
-    "endings": ("uncompleted_action", "demand", "entrance", "confession", "surrender", "interruption"),
+    "endings": ("uncompleted_action", "reveal", "demand", "entrance", "confession", "surrender", "interruption"),
     "subtitle": {"font": "DejaVu Sans", "size": 64, "colour": "&H0000FFFF", "outline": 4, "align": 2, "margin_v": 420},
 }
 
@@ -65,6 +65,15 @@ def prompt(kind: str, camera: str, action: str, grade: str = "neutral", extra: s
     grade_words = GRADE_WORDS.get(grade, "")
     grade_sentence = (grade_words[:1].upper() + grade_words[1:] + ".") if grade_words else ""
     return " ".join(part for part in (boil, camera, action, grade_sentence, extra, TAIL_V5) if part)
+
+
+# Delivery grade for the dramabox preset: warm skin, a little contrast, a slight bloom.
+# Applied in assembly after the per-shot grade and before the yellow subtitles.
+DRAMABOX_LOOK = (
+    "colorbalance=rs=0.06:gs=0.02:bs=-0.05:rm=0.05:bm=-0.04,"
+    "eq=contrast=1.08:saturation=1.12:gamma=0.97,"
+    "gblur=sigma=0.4"
+)
 
 
 def negative(kind: str, *, kiss: bool = False) -> str:

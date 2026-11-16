@@ -9,7 +9,8 @@ satrcut assemble -e 1 --preset reels
 
 | Preset | Frame | fps | Loudness | Subtitle safe area |
 |---|---|---|---|---|
-| `master` (default) | plan delivery, usually 1080×1920 | plan | -16 LUFS | margin 420 |
+| `dramabox` (default when `style: dramabox`) | 1080×1920 | 24 | -14 LUFS | bold yellow, black outline, margin 500 |
+| `master` | plan delivery, usually 1080×1920 | plan | -16 LUFS | margin 420 |
 | `tiktok` | 1080×1920 | 30 | -14 LUFS | higher bottom margin, extra right inset |
 | `youtube_shorts` | 1080×1920 | 30 | -14 LUFS | bottom margin 480 |
 | `reels` | 1080×1920 | 30 | -14 LUFS | bottom margin 540, extra right inset |

@@ -11,9 +11,21 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from satrcut.style import DRAMABOX_LOOK
+
 ARABIC = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]")
 
 PRESETS: dict[str, dict[str, Any]] = {
+    "dramabox": {
+        "label": "DramaBox-style",
+        "width": 1080,
+        "height": 1920,
+        "fps": 24,
+        "lufs": -14.0,
+        "safe": {"margin_v": 500, "margin_l": 90, "margin_r": 90, "outline": 6, "size": 68},
+        "font": "DejaVu Sans",
+        "look": DRAMABOX_LOOK,
+    },
     "master": {
         "label": "Master",
         "width": None,
@@ -98,6 +110,8 @@ def loudnorm(lufs: float) -> str:
 
 
 def delivery_for(plan: dict[str, Any], name: str | None) -> dict[str, Any]:
+    if not name:
+        name = "dramabox" if str(plan.get("style") or "dramabox") == "dramabox" else "master"
     chosen = preset(name)
     base = plan.get("delivery") or {}
     return {
@@ -107,5 +121,6 @@ def delivery_for(plan: dict[str, Any], name: str | None) -> dict[str, Any]:
         "fps": int(chosen["fps"] or base.get("fps") or 24),
         "lufs": float(chosen["lufs"]),
         "safe": dict(chosen["safe"]),
+        "look": chosen.get("look") or "",
         "lang": str(plan.get("lang") or "en"),
     }
