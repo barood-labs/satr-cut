@@ -1,0 +1,155 @@
+episode: 1
+title: Rooftop
+ending: uncompleted_action
+time_card: "Ten Minutes Earlier"
+stakes_line: "Don't answer that."
+card_duration_s: 1.2
+seeds: [611, 733, 857, 919]
+scenes:
+  - id: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+  - id: "INT. STAIRWELL - NIGHT"
+    place: stairwell
+shots:
+  - id: 1-hook
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: ecu
+    kind: character
+    frames: 45
+    in_frame: [jordan]
+    faces_visible: [jordan]
+    grade: desire
+    beat: hook
+    anchor: keyed
+    line_mode: vo
+    camera: "Vertical extreme close-up of her eyes. The camera creeps in slowly and steadily."
+    action: "Jordan's eyes stay locked on a figure just off-camera, catchlights bright, lips sealed, a slow blink, neon bokeh behind her."
+    motion: "slow blink; catchlights; camera creeps in"
+  - id: 2-ecu
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: ecu
+    kind: character
+    frames: 41
+    in_frame: [alex]
+    faces_visible: [alex]
+    grade: danger
+    anchor: keyed
+    line_mode: vo
+    camera: "Vertical extreme close-up of his eyes. The camera creeps in slowly."
+    action: "Alex's tired eyes snap wider, brows rising, a sharp breath, lips sealed, cold blue neon on the skin."
+    motion: "eyes widen; brows rise; breath; camera creeps in"
+  - id: 2-react
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: cu
+    kind: character
+    frames: 33
+    in_frame: [jordan]
+    faces_visible: [jordan]
+    grade: danger
+    anchor: keyed
+    line_mode: listener
+    camera: "Vertical close-up in side profile. The camera creeps in slowly."
+    action: "Jordan turns from profile toward camera, eyes glistening, lips sealed, a held breath, cool light on her jaw."
+    motion: "head turn; held breath; camera creeps in"
+  - id: 3-cu
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: cu
+    kind: character
+    frames: 41
+    in_frame: [alex]
+    faces_visible: [alex]
+    grade: danger
+    anchor: keyed
+    line_mode: vo
+    camera: "Vertical close-up from the collarbones up. The camera creeps in slowly."
+    action: "Alex stares past camera, jaw set, lips sealed, a breath, the coat collar sharp against the night."
+    motion: "held stare; breath; camera creeps in"
+  - id: 3-insert
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: insert
+    kind: insert
+    frames: 33
+    in_frame: []
+    faces_visible: []
+    grade: danger
+    anchor: keyed
+    line_mode: insert
+    camera: "Vertical macro of a black smartphone face-down on wet concrete. The camera creeps in slowly."
+    action: "The dark phone screen wakes with a bright incoming-call glow that blooms across the wet concrete."
+    motion: "screen wakes; glow blooms; camera creeps in"
+  - id: 3-os
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: cu
+    kind: character
+    frames: 41
+    in_frame: [jordan]
+    faces_visible: [jordan]
+    grade: danger
+    anchor: keyed
+    line_mode: listener
+    speaker: "Alex (O.S.)"
+    line: "Don't answer that."
+    subtitle: "Don't answer that."
+    camera: "Vertical close-up of the listener. The camera creeps in slowly."
+    action: "Jordan listens, eyes widening, lips sealed, the neon behind her staying still."
+    motion: "eyes widen; lips sealed; camera creeps in"
+  - id: 4-cu
+    scene: "EXT. ROOFTOP - NIGHT"
+    place: rooftop
+    shot_type: cu
+    kind: character
+    frames: 33
+    in_frame: [jordan]
+    faces_visible: [jordan]
+    grade: danger
+    anchor: keyed
+    line_mode: vo
+    camera: "Vertical close-up, shallow focus. The camera drifts slowly forward."
+    action: "Jordan's gaze drops, lips sealed, jaw set, a single blink, cool rim light on her cheekbone."
+    motion: "gaze drops; blink; camera drifts"
+  - id: 5-door
+    scene: "INT. STAIRWELL - NIGHT"
+    place: stairwell
+    shot_type: insert
+    kind: insert
+    frames: 33
+    in_frame: []
+    faces_visible: []
+    grade: danger
+    anchor: keyed
+    line_mode: vo
+    speaker: "Sam (O.S.)"
+    line: "Wait."
+    subtitle: "Wait."
+    camera: "Vertical close shot of a closed painted metal door. The camera creeps in slowly."
+    action: "A stripe of warm light widens along the edge of the closed door, dust turning in the beam."
+    motion: "light stripe widens; dust turns; camera creeps in"
+    sfx:
+      - file: audio/sfx/door.wav
+        at: 0.35
+        gain: 0.7
+        synth: noise
+  - id: 5-end
+    scene: "INT. STAIRWELL - NIGHT"
+    place: stairwell
+    shot_type: cu
+    kind: character
+    frames: 41
+    in_frame: [sam]
+    faces_visible: [sam]
+    grade: danger
+    anchor: keyed
+    line_mode: listener
+    speaker: "Alex (O.S.)"
+    line: "You were not supposed to be here."
+    subtitle: "You were not supposed to be here."
+    end_on: line_end
+    camera: "Vertical close-up just inside the doorway. The camera creeps in slowly."
+    action: "Sam stands in the warm light, eyes on a figure ahead, lips sealed, jaw set, the closed door at the edge of frame."
+    motion: "held look; camera creeps in"

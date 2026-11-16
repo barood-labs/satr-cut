@@ -1,0 +1,42 @@
+name: demo-hook
+aspect: "9:16"
+render: { width: 480, height: 848, fps: 16 }
+delivery: { width: 1080, height: 1920, fps: 24 }
+target_duration_s: 23
+style: dramabox
+hook_s: 3
+endings: [uncompleted_action, demand, entrance, confession, interruption]
+forbidden_names: []
+characters:
+  alex:
+    display: Alex
+    look: "the man with short dark hair in a black wool coat, open collar"
+    unique_detail: "a thin scar at the left eyebrow"
+    voice: mock:alex
+    sheet: assets/alex_sheet.png
+  jordan:
+    display: Jordan
+    look: "the woman with shoulder-length dark hair in a camel coat, gold hoop earring"
+    unique_detail: "a gold hoop in the left ear"
+    voice: mock:jordan
+    sheet: assets/jordan_sheet.png
+  sam:
+    display: Sam
+    look: "the colleague with a sharp bob in a slate blazer"
+    unique_detail: "a sharp chin-length bob"
+    voice: mock:sam
+    sheet: assets/sam_sheet.png
+places:
+  rooftop: { desc: "night rooftop, wet concrete, unreadable neon bokeh" }
+  stairwell: { desc: "narrow concrete stairwell, one bare bulb, painted metal rail" }
+wardrobe:
+  rooftop:
+    alex: "black wool coat, open collar"
+    jordan: "camel coat, gold hoop earring"
+  stairwell:
+    sam: "slate blazer over a cream blouse"
+providers:
+  video: mock
+  tts: mock
+  asr: mock
+music: audio/bed.wav
